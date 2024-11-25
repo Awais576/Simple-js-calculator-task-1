@@ -16,7 +16,7 @@ function appendValue(value) {
   }
 }
 
-
+//function to clear calculator display
 function clearDisplay() {
   display.innerText = "0";
 }
@@ -27,7 +27,7 @@ function isValidExpression(expression) {
   return !invalidPatterns.test(expression);
 }
 
-
+//function to perform arithmetic operations
 function calculate() {
   try {
     const expression = display.innerText;

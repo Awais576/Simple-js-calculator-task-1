@@ -1,27 +1,60 @@
 let display = document.getElementById("display");
 
 function appendValue(value) {
-  if (display.innerText === "0" || display.innerText === "Please enter denominator greater than 0") {
+  const currentDisplay = display.innerText;
+
+  // Prevent multiple decimal points in the same number
+  if (value === "." && currentDisplay.slice(-1) === ".") {
+    return;
+  }
+
+  // Replace "0" or error messages with the new value
+  if (currentDisplay === "0" || currentDisplay === "Cannot divide by zero." || currentDisplay === "Invalid expression.") {
     display.innerText = value;
   } else {
     display.innerText += value;
   }
 }
 
+
 function clearDisplay() {
   display.innerText = "0";
 }
+
+function isValidExpression(expression) {
+  // Regular expression to check for invalid sequences
+  const invalidPatterns = /(\+{2,}|\-{2,}|\*{2,}|\/{2,}|[+\-*/]{2,})/;
+  return !invalidPatterns.test(expression);
+}
+
 
 function calculate() {
   try {
     const expression = display.innerText;
 
-    if (expression.includes("/0")) {
-      throw "Math's Error";
+    // Validate the input expression
+    if (!isValidExpression(expression)) {
+      throw "Invalid expression.";
     }
 
-    display.innerText = eval(expression);
+    // Check for division by zero
+    if (expression.includes("/0")) {
+      throw "Cannot divide by zero.";
+    }
+
+    // Attempt to evaluate the expression
+    const result = eval(expression);
+
+    // Check for undefined or NaN results
+    if (isNaN(result) || result === undefined) {
+      throw "Invalid calculation.";
+    }
+
+    // Display the result
+    display.innerText = result;
   } catch (error) {
-    display.innerText = error;
+    // Show specific error messages
+    display.innerText = error || "Syntax Error";
   }
 }
+
